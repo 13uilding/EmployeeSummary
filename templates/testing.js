@@ -1,12 +1,35 @@
 const handlebars = require("handlebars");
 
-var source = "<p>Hello, my name is {{name}}. I am from {{hometown}}. I have " +
-             "{{kids.length}} kids:</p>" +
-             "<ul>{{#kids}}<li>{{name}} is {{age}}</li>{{/kids}}</ul>";
+var source = 
+`<div class="test">
+    <div class="columns">
+    <div class="column">1</div>
+    <div class="column">2</div>
+    <div class="column">3</div>
+    <div class="column">4</div>
+    <div class="column">5</div>
+    </div>
+    <button class="button">
+    Button
+    </button>
+
+    <button class="button is-primary">
+    Primary button
+    </button>
+
+    <button class="button is-large">
+    Large button
+    </button>
+
+    <button class="button is-loading">
+    Loading button
+    </button>
+</div>`;
 var template = handlebars.compile(source);
  
-var data = { "name": "Alan", "hometown": "Somewhere, TX",
-             "kids": [{"name": "Jimmy", "age": "12"}, {"name": "Sally", "age": "4"}]};
+var data = { 
+
+};
 var result = template(data);
 
 // console.log(result)
