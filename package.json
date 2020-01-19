@@ -1,0 +1,29 @@
+{
+  "name": "EmployeeSumary",
+  "version": "1.0.0",
+  "description": "As a manager I want to generate a webpage that displays my team's basic info so that I have quick access to emails and GitHub profiles.",
+  "main": "app.js",
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/13uilding/EmployeeSumary.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/13uilding/EmployeeSumary/issues"
+  },
+  "homepage": "https://github.com/13uilding/EmployeeSumary#readme",
+  "dependencies": {
+    "axios": "^0.19.1",
+    "handlebars": "^4.7.2",
+    "inquirer": "^7.0.3"
+  }
+}
