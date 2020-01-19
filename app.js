@@ -1,156 +1,100 @@
-const main = require("./templates/main");
-const fs = require("fs");
+// Keep these lines; they're important!
+const Manager = require("./lib/Manager");
+const Engineer = require("./lib/Engineer");
+const Intern = require("./lib/Intern");
 const inquirer = require("inquirer");
-var { from } = require('rxjs'); // Observable arrays
+const path = require("path");
+const fs = require("fs");
 
-// console.log(main);
-  
-// // Pizza
-// inquirer
-//     .prompt([
-//     {
-//         type: 'checkbox',
-//         message: 'Select toppings',
-//         name: 'toppings',
-//         choices: [
-//         new inquirer.Separator(' = The Meats = '),
-//         {
-//             name: 'Pepperoni'
-//         },
-//         {
-//             name: 'Ham'
-//         },
-//         {
-//             name: 'Ground Meat'
-//         },
-//         {
-//             name: 'Bacon'
-//         },
-//         new inquirer.Separator(' = The Cheeses = '),
-//         {
-//             name: 'Mozzarella',
-//             checked: true
-//         },
-//         {
-//             name: 'Cheddar'
-//         },
-//         {
-//             name: 'Parmesan'
-//         },
-//         new inquirer.Separator(' = The usual ='),
-//         {
-//             name: 'Mushroom'
-//         },
-//         {
-//             name: 'Tomato'
-//         },
-//         new inquirer.Separator(' = The extras = '),
-//         {
-//             name: 'Pineapple'
-//         },
-//         {
-//             name: 'Olives',
-//             disabled: 'out of stock'
-//         },
-//         {
-//             name: 'Extra cheese'
-//         }
-//         ],
-//         validate: function(answer) {
-//         if (answer.length < 1) {
-//             return 'You must choose at least one topping.';
-//         }
+const outputPath = path.resolve(__dirname, "output", "team.html");
 
-//         return true;
-//         }
-//     }
-//     ])
-//     .then(answers => {
-//     console.log(JSON.stringify(answers, null, '  '));
-//     });
-    
+const render = require("./lib/htmlRenderer");
 
-
-
-fs.writeFile("./output/output.html", main, err => {
-    if (err) throw err;
-})
-//  cardsContainer = document.querySelector(".cardsContainer");
-
-
-// RX Observable arrays
-
-// var questions = [
-//   {
-//     type: 'input',
-//     name: 'first_name',
-//     message: "What's your first name"
-//   },
-//   {
-//     type: 'input',
-//     name: 'last_name',
-//     message: "What's your last name",
-//     default: function() {
-//       return 'Doe';
-//     }
-//   },
-//   {
-//     type: 'input',
-//     name: 'phone',
-//     message: "What's your phone number",
-//     validate: function(value) {
-//       var pass = value.match(
-//         /^([01]{1})?[-.\s]?\(?(\d{3})\)?[-.\s]?(\d{3})[-.\s]?(\d{4})\s?((?:#|ext\.?\s?|x\.?\s?){1}(?:\d+)?)?$/i
-//       );
-//       if (pass) {
-//         return true;
-//       }
-
-//       return 'Please enter a valid phone number';
-//     }
-//   }
-// ];
-
-// var observable = from(questions);
-
-// inquirer.prompt(observable).ui.process.subscribe(
-//   function(ans) {
-//     console.log('Answer is: ', ans);
-//   },
-//   function(err) {
-//     console.log('Error: ', err);
-//   },
-//   function() {
-//     console.log('Completed');
-//   }
-// );
+// Mine
+const main = require("./templates/main");
+const tools = require("./lib/tools");
 
 // Recursive definitely going to use
-var output = [];
+const output = [];
 
 var questions = [
-  {
-    type: 'input',
-    name: 'tvShow',
-    message: "What's your favorite TV show?"
-  },
-  {
-    type: 'confirm',
-    name: 'askAgain',
-    message: 'Want to enter another TV show favorite (just hit enter for YES)?',
-    default: true
-  }
+    {
+        type: 'list',
+        name: 'title',
+        message: 'What type of employee would you like to add?',
+        choices: [new inquirer.Separator(), 'Manager', 'Engineer', 'Intern', new inquirer.Separator()],
+    },
+    {
+        type: 'input',
+        name: 'first_name',
+        message: "What's their first name?"
+    },
+    {
+        type: 'input',
+        name: 'last_name',
+        message: "What's their last name?"
+    },
+    {
+        type: 'input',
+        name: 'email',
+        message: "What's their email?"
+    },
+    {
+        type: 'input',
+        name: 'id',
+        message: "What is their employee id?"
+    },
+    {
+        type: 'confirm',
+        name: 'anotherOne',
+        message: 'Want to add another team member?',
+        default: true
+    }
 ];
 
+//! Handle errors (like when someone doesn't enter something)
 function ask() {
-  inquirer.prompt(questions).then(answers => {
-    output.push(answers.tvShow);
-    if (answers.askAgain) {
+    inquirer.prompt(questions).then(answers => {
+    let another = answers.anotherOne;
+    let name = `${tools.titleCase(answers.first_name)} ${tools.titleCase(answers.last_name)}`
+    answers.name = name;
+    delete answers.anotherOne
+    //   console.log(answers);
+      output.push(answers);
+    if (another) {
       ask();
     } else {
-      console.log('Your favorite TV Shows:', output.join(', '));
+      console.log(output);
     }
   });
 }
 
-ask();
+
+function init(){
+    ask();
+}
+
+init();
+
+
+// Build out Employee.js, Engineer.js, Intern.js, and Manager.js in the lib folder. With exception to htmlRenderer.js (provided), the files in this folder will all be classes and will be used as blueprints for generating specific types of employee objects. Refer to the instructions for more information as to the specific properties and methods each class should contain. I recommend building these classes out first and testing them to verify they generate objects of the correct structure. In order for the code provided in htmlRenderer.js to work, the objects generated must strictly match the structure indicated in the assignment instructions.
+//!! Once your code is functioning, spend some time studying htmlRenderer.js inside of the lib folder to understand how it works. After you have an understanding of how the code works and interfaces with both the HTML templates and app.js, write up a paragraph explaining your findings. Please include this explanation as a comment in BCS when you submit your assignment.
+// Run your automated tests frequently using the command npm test. Use the results of the tests to guide you as you build the functionality out bit-by-bit.
+
+
+//!! inquirer gather information and create objects for each team member (using the correct classes as blueprints!)
+// HINT: each employee type (manager, engineer, or intern) has slightly different
+// information; write your code to ask different questions via inquirer depending on
+// employee type.
+
+
+// After the user input, call the `render` function, pass in an array containing all employee objects; the `render` function will generate and return a block of HTML including templated divs for each employee!
+
+// After you have your html write it to a file named `team.html` in `output` folder. You can use the variable `outputPath` above target this location.
+
+
+// Mine
+// fs.writeFile("./output/output.html", main, err => {
+//     if (err) throw err;
+// })
+
