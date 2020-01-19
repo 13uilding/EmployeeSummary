@@ -11,11 +11,11 @@ const outputPath = path.resolve(__dirname, "output", "team.html");
 const render = require("./lib/htmlRenderer");
 
 // Mine
-const main = require("./templates/main");
+const main = require("./templates/mainHTML");
 const tools = require("./lib/tools");
 
 // Recursive definitely going to use
-const output = [];
+const employees = [];
 
 var questions = [
     {
@@ -51,7 +51,27 @@ var questions = [
         default: true
     }
 ];
-
+var questionsEngineer = [
+    {
+        type: 'input',
+        name: 'github',
+        message: "What's their GitHub handle?"
+    },
+];
+var questionsManager = [
+    {
+        type: 'input',
+        name: 'officeNumber',
+        message: "What's their office number?"
+    },
+];
+var questionsIntern = [
+    {
+        type: 'input',
+        name: 'school',
+        message: "What's school are they currently attending?"
+    },
+]
 //! Handle errors (like when someone doesn't enter something)
 function ask() {
     inquirer.prompt(questions).then(answers => {
@@ -59,12 +79,24 @@ function ask() {
     let name = `${tools.titleCase(answers.first_name)} ${tools.titleCase(answers.last_name)}`
     answers.name = name;
     delete answers.anotherOne
+    switch (answers.title) {
+        case 'Manager':
+            console.log('Manager');
+            break;
+        case 'Engineer':
+            console.log("Engineer");
+            break;
+        case 'Intern':
+            console.log("Intern");
+            break;
+    }
     //   console.log(answers);
-      output.push(answers);
+      employees.push(answers);
     if (another) {
       ask();
     } else {
-      console.log(output);
+      console.log(employees);
+      
     }
   });
 }
@@ -76,10 +108,6 @@ function init(){
 
 init();
 
-
-// Build out Employee.js, Engineer.js, Intern.js, and Manager.js in the lib folder. With exception to htmlRenderer.js (provided), the files in this folder will all be classes and will be used as blueprints for generating specific types of employee objects. Refer to the instructions for more information as to the specific properties and methods each class should contain. I recommend building these classes out first and testing them to verify they generate objects of the correct structure. In order for the code provided in htmlRenderer.js to work, the objects generated must strictly match the structure indicated in the assignment instructions.
-//!! Once your code is functioning, spend some time studying htmlRenderer.js inside of the lib folder to understand how it works. After you have an understanding of how the code works and interfaces with both the HTML templates and app.js, write up a paragraph explaining your findings. Please include this explanation as a comment in BCS when you submit your assignment.
-// Run your automated tests frequently using the command npm test. Use the results of the tests to guide you as you build the functionality out bit-by-bit.
 
 
 //!! inquirer gather information and create objects for each team member (using the correct classes as blueprints!)

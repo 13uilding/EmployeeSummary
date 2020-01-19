@@ -1,7 +1,7 @@
 const handlebars = require("handlebars");
-const engineer = require("./engineer");
-const intern = require("./intern");
-const manager = require("./manager");
+const engineer = require("./engineerHTML");
+const intern = require("./internHTML");
+const manager = require("./managerHTML");
 const testing = require("./testing")
 console.log("hi");
 var source = 
