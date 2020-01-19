@@ -1,4 +1,8 @@
-<!DOCTYPE html>
+const handlebars = require("handlebars");
+const testing = require("./testing")
+console.log("hi");
+var source = 
+`<!DOCTYPE html>
 <html>
   <head>
     <meta charset="utf-8">
@@ -14,7 +18,7 @@
       <h1 class="title">
         Hello World
       </h1>
-      <p>Hello, my name is Alan. I am from Somewhere, TX. I have 2 kids:</p><ul><li>Jimmy is 12</li><li>Sally is 4</li></ul>
+      {{{templates.testing}}}
       <p class="subtitle">
         My first website with <strong>Bulma</strong>!
       </p>
@@ -22,3 +26,15 @@
   </section>
   </body>
 </html>
+`
+var template = handlebars.compile(source);
+// console.log(testing)
+ 
+var data = { 
+    "templates": {"testing": testing},
+};
+var result = template(data);
+
+// console.log(result)
+
+module.exports = result;

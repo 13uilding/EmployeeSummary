@@ -1,9 +1,11 @@
+const main = require("./templates/main");
+const fs = require("fs");
 
-const testing = require("./templates/testing.js");
+console.log(main);
 
-const cardsContainer = document.querySelector(".cardsContainer");
+fs.writeFile("./output/output.html", main, err => {
+    if (err) throw err;
+})
+//  cardsContainer = document.querySelector(".cardsContainer");
 
-let testingP = document.createElement("div");
-// testingP.classList("card");
-testingP.innerHTML = testing.result;
-cardsContainer.append(testingP);
+
