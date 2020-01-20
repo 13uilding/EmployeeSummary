@@ -7,10 +7,9 @@
     "lib": "lib",
     "test": "test"
   },
-  "scripts": {   
+  "scripts": {
     "test": "jest --verbose test/*"
   },
-  
   "repository": {
     "type": "git",
     "url": "git+https://github.com/13uilding/EmployeeSummary.git"
