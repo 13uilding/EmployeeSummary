@@ -7,9 +7,10 @@
     "lib": "lib",
     "test": "test"
   },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "scripts": {   
+    "test": "jest --verbose test/*"
   },
+  
   "repository": {
     "type": "git",
     "url": "git+https://github.com/13uilding/EmployeeSummary.git"
@@ -25,6 +26,7 @@
     "axios": "^0.19.1",
     "bulma": "^0.8.0",
     "handlebars": "^4.7.2",
-    "inquirer": "^7.0.3"
+    "inquirer": "^7.0.3",
+    "jest": "^24.9.0"
   }
 }
