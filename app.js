@@ -5,14 +5,14 @@ const Intern = require("./lib/Intern");
 const inquirer = require("inquirer");
 const path = require("path");
 const fs = require("fs");
+const tools = require("./lib/tools");
 
 const outputPath = path.resolve(__dirname, "output", "team.html");
 
 const render = require("./lib/htmlRenderer");
 
 // Mine
-const main = require("./templates/mainHTML");
-const tools = require("./lib/tools");
+// const main = require("./templates/mainHTML");
 
 // Recursive definitely going to use
 const employees = [];
@@ -44,18 +44,18 @@ var questions = [
         name: 'id',
         message: "What is their employee id?"
     },
-    {
-        type: 'confirm',
-        name: 'anotherOne',
-        message: 'Want to add another team member?',
-        default: true
-    }
 ];
 var questionsEngineer = [
     {
         type: 'input',
         name: 'github',
         message: "What's their GitHub handle?"
+    },
+    {
+        type: 'confirm',
+        name: 'anotherOne',
+        message: 'Want to add another team member?',
+        default: true
     },
 ];
 var questionsManager = [
@@ -64,6 +64,12 @@ var questionsManager = [
         name: 'officeNumber',
         message: "What's their office number?"
     },
+    {
+        type: 'confirm',
+        name: 'anotherOne',
+        message: 'Want to add another team member?',
+        default: true
+    },
 ];
 var questionsIntern = [
     {
@@ -71,54 +77,65 @@ var questionsIntern = [
         name: 'school',
         message: "What's school are they currently attending?"
     },
+    {
+        type: 'confirm',
+        name: 'anotherOne',
+        message: 'Want to add another team member?',
+        default: true
+    },
 ]
 //! Handle errors (like when someone doesn't enter something)
 function ask() {
     inquirer.prompt(questions).then(answers => {
-    let another = answers.anotherOne;
     let name = `${tools.titleCase(answers.first_name)} ${tools.titleCase(answers.last_name)}`
     answers.name = name;
     delete answers.anotherOne
     switch (answers.title) {
         case 'Manager':
-            console.log('Manager');
+            inquirer.prompt(questionsManager).then(answersM => {
+                answers.officeNumber = answersM.officeNumber;
+                // name, id, email, officeNumber
+                let {name, id, email, officeNumber} = answers;
+                let manager = new Manager(name, id, email, officeNumber)
+                employees.push(manager);
+                finishQuestionaire(answersM);
+            });
             break;
         case 'Engineer':
-            console.log("Engineer");
+            inquirer.prompt(questionsEngineer).then(answersE => {
+                answers.github = answersE.github;      
+                let {name, id, email, github} = answers;      
+                let engineer = new Engineer(name, id, email, github)
+                employees.push(engineer);
+                finishQuestionaire(answersE)
+            });
             break;
         case 'Intern':
-            console.log("Intern");
+            inquirer.prompt(questionsIntern).then(answersI => {
+                answers.school = answersI.school;
+                let {name, id, email , school} = answers;
+                let intern = new Intern(name, id, email , school)
+                employees.push(intern);
+                finishQuestionaire(answersI);
+            });
             break;
     }
-    //   console.log(answers);
-      employees.push(answers);
-    if (another) {
-      ask();
-    } else {
-      console.log(employees);
-      
-    }
-  });
+    
+    
+});
 }
 
-
-function init(){
-    ask();
+function finishQuestionaire(answers) {
+    if (answers.anotherOne) {
+        ask();
+      } else {
+        fs.writeFileSync(outputPath, render(employees), err => {
+            if (err) throw err;
+        });
+      }
 }
 
-init();
-
-
-
-//!! inquirer gather information and create objects for each team member (using the correct classes as blueprints!)
-// HINT: each employee type (manager, engineer, or intern) has slightly different
-// information; write your code to ask different questions via inquirer depending on
-// employee type.
-
-
-// After the user input, call the `render` function, pass in an array containing all employee objects; the `render` function will generate and return a block of HTML including templated divs for each employee!
-
-// After you have your html write it to a file named `team.html` in `output` folder. You can use the variable `outputPath` above target this location.
+ask();
 
 
 // Mine
