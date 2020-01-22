@@ -1,7 +1,32 @@
-@import "../../node_modules/bulma/sass/base/all.sass"; 
-@import "../../node_modules/bulma/sass/components/card.sass"; 
-@import "../../node_modules/bulma/sass/elements/button.sass"; 
-@import "../../node_modules/bulma/sass/form/file.sass"; 
-@import "../../node_modules/bulma/sass/grid/columns.sass"; 
-@import "../../node_modules/bulma/sass/utilities/_all.sass";
-/* They all have an all sass if I want to grab everything out */
+body {
+    background: url("../images/lighthouse.jpg") no-repeat center fixed;
+    background-size: cover;
+    background-color: #998726;
+    opacity: 95%
+}
+.team-heading {
+    background-color:#bec7bedc;  
+    background-image: linear-gradient(#797c79dc, #c6d1c6dc);
+    color: white;
+}
+.manager .card-header {
+    background-color: #F16864;
+}
+.manager .card-body{
+    background-color: #ffcacd;
+}
+.intern .card-header {
+    background-color: #64f168
+}
+.intern .card-body{
+    background-color: #aff9ac;
+}
+.engineer .card-body{
+    background-color: #f4f7a3;
+}
+.engineer .card-header {
+    background-color: #edf164;
+}
+.list-group {
+    opacity: 80%;
+}
