@@ -4,6 +4,10 @@ body {
     background-color: #998726;
     opacity: 95%
 }
+.col-4 {
+    margin-bottom: 10px;
+    padding: 0;
+}
 .team-heading {
     background-color:#bec7bedc;  
     background-image: linear-gradient(#797c79dc, #c6d1c6dc);
