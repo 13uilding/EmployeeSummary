@@ -17,118 +17,123 @@ const render = require("./lib/htmlRenderer");
 // Recursive definitely going to use
 const employees = [];
 
+function validateString(string){
+    if (string === ""){
+        console.log("\nPlease enter valid input.")
+    }
+    return string !== "";
+}
+function validateEmail(email){
+    if (!email.includes("@")) {
+        console.log("\nPlease enter an email with an '@'.")
+    }
+    return email.includes("@");
+}
+
 var questions = [
     {
         type: 'list',
         name: 'title',
         message: 'What type of employee would you like to add?',
-        choices: [new inquirer.Separator(), 'Manager', 'Engineer', 'Intern', new inquirer.Separator()],
+        choices: [new inquirer.Separator(), 'Manager', new inquirer.Separator()],
     },
     {
         type: 'input',
         name: 'first_name',
-        message: "What's their first name?"
+        message: "What's their first name?",
+        validate: validateString
     },
     {
         type: 'input',
         name: 'last_name',
-        message: "What's their last name?"
+        message: "What's their last name?",
+        validate: validateString
     },
     {
         type: 'input',
         name: 'email',
-        message: "What's their email?"
+        message: "What's their email?",
+        validate: validateEmail
     },
     {
         type: 'input',
         name: 'id',
-        message: "What is their employee id?"
+        message: "What is their employee id?",
+        validate: validateString
     },
-];
-var questionsEngineer = [
     {
         type: 'input',
         name: 'github',
-        message: "What's their GitHub handle?"
+        message: "What's their GitHub handle?",
+        validate: validateString,
+        when: function( answers ) {
+            return answers.title === "Engineer";
+        }
     },
-    {
-        type: 'confirm',
-        name: 'anotherOne',
-        message: 'Want to add another team member?',
-        default: true
-    },
-];
-var questionsManager = [
-    {
-        type: 'input',
-        name: 'officeNumber',
-        message: "What's their office number?"
-    },
-    {
-        type: 'confirm',
-        name: 'anotherOne',
-        message: 'Want to add another team member?',
-        default: true
-    },
-];
-var questionsIntern = [
     {
         type: 'input',
         name: 'school',
-        message: "What's school are they currently attending?"
+        message: "What is the school they are currently attending?",
+        validate: validateString,
+        when: function( answers ) {
+            return answers.title === "Intern";
+        }
     },
+    {
+        type: 'input',
+        name: 'officeNumber',
+        message: "What's their office number?",
+        validate: validateString,
+        when: function( answers ) {
+            return answers.title === "Manager";
+        }
+    },
+
     {
         type: 'confirm',
         name: 'anotherOne',
         message: 'Want to add another team member?',
         default: true
     },
-]
+];
 //! Handle errors (like when someone doesn't enter something)
 function ask() {
     inquirer.prompt(questions).then(answers => {
-    let name = `${tools.titleCase(answers.first_name)} ${tools.titleCase(answers.last_name)}`
-    answers.name = name;
-    delete answers.anotherOne
+    let nameTitleCase = `${tools.titleCase(answers.first_name)} ${tools.titleCase(answers.last_name)}`
+    answers.name = nameTitleCase;
+    const {name, id, email} = answers;
     switch (answers.title) {
         case 'Manager':
-            inquirer.prompt(questionsManager).then(answersM => {
-                answers.officeNumber = answersM.officeNumber;
-                // name, id, email, officeNumber
-                let {name, id, email, officeNumber} = answers;
-                let manager = new Manager(name, id, email, officeNumber)
+                let manager = new Manager(name, id, email, answers.officeNumber)
                 employees.push(manager);
-                finishQuestionaire(answersM);
-            });
+                finishQuestionaire(answers);
             break;
-        case 'Engineer':
-            inquirer.prompt(questionsEngineer).then(answersE => {
-                answers.github = answersE.github;      
-                let {name, id, email, github} = answers;      
-                let engineer = new Engineer(name, id, email, github)
+        case 'Engineer':    
+                let engineer = new Engineer(name, id, email, answers.github)
                 employees.push(engineer);
-                finishQuestionaire(answersE)
-            });
+                finishQuestionaire(answers)
             break;
         case 'Intern':
-            inquirer.prompt(questionsIntern).then(answersI => {
-                answers.school = answersI.school;
-                let {name, id, email , school} = answers;
-                let intern = new Intern(name, id, email , school)
+                let intern = new Intern(name, id, email , answers.school)
                 employees.push(intern);
-                finishQuestionaire(answersI);
-            });
+                finishQuestionaire(answers);
             break;
-    }
-    
-    
+    }   
 });
 }
 
 function finishQuestionaire(answers) {
     if (answers.anotherOne) {
+        questions[0] = {
+            type: 'list',
+            name: 'title',
+            message: 'What type of employee would you like to add?',
+            choices: [new inquirer.Separator(), 'Manager', 'Engineer', 'Intern', new inquirer.Separator()],
+        },
+        delete answers.anotherOne
         ask();
       } else {
+        delete answers.anotherOne
         fs.writeFileSync(outputPath, render(employees), err => {
             if (err) throw err;
         });
