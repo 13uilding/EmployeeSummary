@@ -2,6 +2,8 @@
 
 ====ABOUT====
 
+Link: https://github.com/13uilding/EmployeeSummary
+Functioning application: https://drive.google.com/file/d/1HK1FgnfE4KGj-GVdd8gsWuHDdLym1gyZ/view
 Create a Node application, which allows the user to create a team of managers, engineers, and interns that outputs an HTML document. The application starts with app.js, and it features a series of questions regarding the different types of employees. Once an employee has been added, the user can choose to add another employee and repeat the questionnaire. After the questionnaire, each employee has an object stored inside an array. Then I run a render file, which takes the information from the employees, and prints it onto a template. I then use fs to write the template to a file, team.html, in the output folder. 
 
 ====ABOUT====
